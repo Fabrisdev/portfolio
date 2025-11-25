@@ -2,3 +2,8 @@
   font-family: ScienceGothic;
   src: url('/ScienceGothic.ttf');
 }
+
+@font-face {
+  font-family: ShootingStar;
+  src: url('/ShootingStar.ttf');
+}
