@@ -1,12 +1,12 @@
 <div class="relative flex justify-center items-center gap-2 font-[ShootingStar] text-2xl">
-  <a href="#about-me" class="rounded-l-full bg-[#5D688A] h-15 flex justify-around items-center pl-15 pr-15 relative">ABOUT &nbspME</a>
+  <a href="#about-me" class="rounded-l-full bg-[#5D688A] h-15 flex justify-around items-center pl-15 pr-15 relative origin-bottom-right">ABOUT &nbspME</a>
   <a href="#projects" class="rounded-xs bg-[#F7A5A5] h-15 flex justify-around items-center pl-15 pr-15 relative">PROJECTS</a>
-  <a href="#contact" class="rounded-r-full bg-[#FFDBB6] h-15 flex justify-around items-center pl-15 pr-15 relative">CONTACT</a>
+  <a href="#contact" class="rounded-r-full bg-[#FFDBB6] h-15 flex justify-around items-center pl-15 pr-15 relative origin-bottom-left">CONTACT</a>
 </div>
 
 <style>
   a {
-    top: 0;
+    top: 0px;
     transition: all ease 0.5s;
     border: 2px dashed black;
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000,
@@ -14,7 +14,35 @@
   }
 
   a:hover {
+    filter: saturate(3);
     top: 10px;
-    filter: saturate(3)
+  }
+
+  a:first-child:hover {
+    transform: rotate(-10deg);
+  }
+
+  a:last-child:hover {
+    transform: rotate(10deg);
+  }
+
+  .fall {
+    transition: all 1.5s;
+    transform-origin: 50% 50% !important;
+    top: 1000px !important;
+    transform: rotate(360deg) !important;
+    opacity: 0;
   }
 </style>
+
+<script>
+  const links = document.querySelectorAll('a')
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      link.classList.add('fall')
+      setTimeout(() => {
+        link.classList.remove('fall')
+      }, 2000)
+    })
+  })
+</script>
