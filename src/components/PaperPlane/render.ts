@@ -29,7 +29,7 @@ function loadPlane(): Promise<THREE.Group<THREE.Object3DEventMap>> {
 	let plane = null;
 	const loader = new GLTFLoader();
 	return new Promise((resolve, _) => {
-		loader.load("/public/paper_plane.glb", (model) => {
+		loader.load("/paper_plane.glb", (model) => {
 			plane = model.scene;
 			resolve(plane);
 		});
