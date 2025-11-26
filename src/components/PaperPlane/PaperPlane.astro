@@ -6,9 +6,35 @@ import FpsCounter from "../FpsCounter.astro"
 <FpsCounter/>
 
 <script>
-import { renderLoop } from "./render";
+import { renderLoop, plane } from "./render";
+import * as THREE from 'three'
+const fpsCounter = document.querySelector("#fps-counter");
+const clock = new THREE.Clock()
+const mixer = new THREE.AnimationMixer(plane)
 
-renderLoop(plane => {
-  plane.rotateX(0.001)
+const scaleKeyframes = new THREE.VectorKeyframeTrack(
+  '.scale',
+  [0, 5],
+  [0.1,0.1,0.1,  0.01,0.01,0.01]
+)
+
+const clip = new THREE.AnimationClip('planeAction', 5, [scaleKeyframes])
+
+const action = mixer.clipAction(clip)
+action.play()
+
+renderLoop(() => {
+  const dt = clock.getDelta()
+  mixer.update(dt)
+  if(import.meta.env.DEV) {
+    updateFpsCounter(dt)
+  }
 })
+
+function updateFpsCounter(dt: number) {
+  const fps = Math.round(1 / dt)
+  if (fpsCounter !== null) {
+		fpsCounter.textContent = `${fps} FPS`;
+	}
+}
 </script>

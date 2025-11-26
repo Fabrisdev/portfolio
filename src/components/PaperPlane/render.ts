@@ -1,16 +1,11 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three-stdlib";
 
-const fpsCounter = document.querySelector("#fps-counter");
-const { _frames, _prevTime, renderer, scene, camera, plane } = await setup();
-let frames = _frames;
-let prevTime = _prevTime;
-type Callback = (_plane: THREE.Group<THREE.Object3DEventMap>) => void;
-let renderCallback: Callback | null = null;
+export const { renderer, scene, camera, plane } = await setup();
 
-export function renderLoop(
-	callback: (_plane: THREE.Group<THREE.Object3DEventMap>) => void,
-) {
+let renderCallback: (() => void) | null = null;
+
+export function renderLoop(callback: () => void) {
 	renderCallback = callback;
 }
 
@@ -18,9 +13,8 @@ function animate() {
 	requestAnimationFrame(animate);
 	renderer.render(scene, camera);
 	if (renderCallback !== null) {
-		renderCallback(plane);
+		renderCallback();
 	}
-	updateFpsCounter();
 }
 
 animate();
@@ -34,20 +28,6 @@ function loadPlane(): Promise<THREE.Group<THREE.Object3DEventMap>> {
 			resolve(plane);
 		});
 	});
-}
-
-function updateFpsCounter() {
-	const time = performance.now();
-	frames++;
-	if (time >= prevTime + 1000) {
-		const fps = Math.round((frames * 1000) / (time - prevTime));
-		if (fpsCounter !== null) {
-			fpsCounter.textContent = `${fps} FPS`;
-		}
-
-		frames = 0;
-		prevTime = time;
-	}
 }
 
 async function setup() {
@@ -72,11 +52,7 @@ async function setup() {
 	plane.scale.set(0.01, 0.01, 0.01);
 	scene.add(plane);
 
-	const frames = 0,
-		prevTime = performance.now();
 	return {
-		_frames: frames,
-		_prevTime: prevTime,
 		renderer,
 		scene,
 		camera,
