@@ -1,7 +1,13 @@
+---
+import FpsCounter from "./FpsCounter.astro"
+---
+
 <div id="paper-plane" class="fixed inset-0 pointer-events-none z-1000"></div>
+<FpsCounter fps={10}/>
 
 <script>
-  console.log('Hola???')
+  const fpsCounter = document.querySelector('#fps-counter')
+  
   import * as THREE from 'three'
   import { GLTFLoader, type GLTF } from 'three-stdlib'
   
@@ -26,7 +32,9 @@
     y: -1,
     z: -1
   }
-  plane.position.set(pos.x, pos.y, pos.z)
+  let speed = 0
+
+  let frames = 0, prevTime = performance.now();
 
   function animate() {
     requestAnimationFrame(animate)
@@ -35,9 +43,28 @@
     if(scale <= 0.01) scale = 0.01
     plane.scale.set(scale, scale, scale)
     plane.rotateX(0.001)
-    
+    plane.rotateY(0.001)
+    plane.position.set(pos.x, pos.y, pos.z)
+    speed += 0.0001
+    pos.x += speed
+    pos.y += speed
+
+    const time = performance.now();
+    frames++
+    if ( time >= prevTime + 1000 ) {
+      const fps = Math.round( ( frames * 1000 ) / ( time - prevTime ) ) 
+      if(fpsCounter !== null) {
+        fpsCounter.textContent = `${fps} FPS`
+      }
+      
+      frames = 0;
+      prevTime = time;
+      
+    }
   }
 
+  //plane.position.set(6, 0, 0)
+  
   animate()
 
   function loadPlane(): Promise<THREE.Group<THREE.Object3DEventMap>> {
@@ -45,7 +72,6 @@
     const loader = new GLTFLoader()
     return new Promise((resolve, _) => {
       loader.load('/public/paper_plane.glb', model => {
-        console.log(model.scene)
         plane = model.scene
         resolve(plane)
       })
