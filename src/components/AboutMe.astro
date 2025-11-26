@@ -1,6 +1,9 @@
 ---
 import { Image } from "astro:assets";
-import waves from "../assets/about-me-waves.svg"
+import wavesBottom from "../assets/about-me-bottom-wave.svg";
+import waves from "../assets/about-me-waves.svg";
 ---
-
-<Image src={waves} alt=""/>
+<div class="absolute left-130 top-85 h-[200px] w-225 bg-[#6198ff] rounded-tr-full rounded-tl-full scale-x-250 z-10"></div>
+<Image src={waves} alt="" class='absolute left-0 top-100 w-svw z-100'/>
+<div class="absolute left-130 top-85 h-[200px] w-225 bg-[#6198ff] rounded-tr-full rounded-tl-full scale-x-250"></div>
+<Image src={wavesBottom} alt="" class='absolute left-0 top-225 w-svw'/>
