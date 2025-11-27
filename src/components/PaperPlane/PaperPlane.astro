@@ -14,18 +14,73 @@ const mixer = new THREE.AnimationMixer(plane)
 
 const scaleKeyframes = new THREE.VectorKeyframeTrack(
   '.scale',
-  [0, 5],
-  [0.1,0.1,0.1,  0.01,0.01,0.01]
+  [0, 5, 7, 12],
+  [
+    0.1,0.1,0.1,
+    0.01,0.01,0.01,
+    0.01,0.01,0.01,
+    0.1,0.1,0.1
+  ]
 )
 
-const clip = new THREE.AnimationClip('planeAction', 5, [scaleKeyframes])
+const positionKeyframes = new THREE.VectorKeyframeTrack(
+  '.position',
+  [0, 2, 4, 7, 12],
+  [
+    -10, 3, 0,  
+    10, -3, -4,
+    17, 7, -7,
+    10, 3, 0,
+    -15, -6, 0
+  ]
+).setInterpolation(THREE.InterpolateSmooth)
+
+const q1 = new THREE.Quaternion().setFromEuler(new THREE.Euler(45, 0, 0));
+const q2 = new THREE.Quaternion().setFromEuler(new THREE.Euler(120, 0, 0));
+const q3 = new THREE.Quaternion().setFromEuler(new THREE.Euler(120, 0, 45));
+const q4 = new THREE.Quaternion().setFromEuler(new THREE.Euler(120, 0, -180));
+const q5 = new THREE.Quaternion().setFromEuler(new THREE.Euler(120, 0, -360));
+const q6 = new THREE.Quaternion().setFromEuler(new THREE.Euler(120, 0, -180));
+
+const rotationKeyframes = new THREE.QuaternionKeyframeTrack(
+  '.quaternion',
+  [0, 2, 5, 7, 10, 12],
+  [
+    q1.x, q1.y, q1.z, q1.w,
+    q2.x, q2.y, q2.z, q2.w,
+    q3.x, q3.y, q3.z, q3.w,
+    q4.x, q4.y, q4.z, q4.w,
+    q5.x, q5.y, q5.z, q5.w,
+    q6.x, q6.y, q6.z, q6.w
+  ]
+).setInterpolation(THREE.InterpolateSmooth)
+
+const clip = new THREE.AnimationClip('planeAction', 10, [scaleKeyframes, positionKeyframes, rotationKeyframes])
 
 const action = mixer.clipAction(clip)
+  .setLoop(THREE.LoopOnce, 1)
+
+action.clampWhenFinished = true
 action.play()
+
+let time = 0
+let opacity = 1
 
 renderLoop(() => {
   const dt = clock.getDelta()
+  time += dt
   mixer.update(dt)
+
+  if(time > 9.5) {
+    opacity -= 2 * dt
+    plane.traverse(obj => {
+      if(obj instanceof THREE.Mesh) {
+        obj.material.transparent = true
+        obj.material.opacity = opacity
+      }
+    })
+  }
+
   if(import.meta.env.DEV) {
     updateFpsCounter(dt)
   }

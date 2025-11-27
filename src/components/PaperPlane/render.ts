@@ -49,7 +49,6 @@ async function setup() {
 	light.position.set(5, 5, 5);
 	scene.add(light);
 	const plane = await loadPlane();
-	plane.scale.set(0.01, 0.01, 0.01);
 	scene.add(plane);
 
 	return {
