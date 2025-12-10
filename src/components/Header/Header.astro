@@ -7,25 +7,3 @@ import Button from "./Button.astro"
   <Button title="Projects" src="/projects_button.png" alt="Projects button"/>
   <Button title="Contact" src="/contact_button.png" alt="Contact button"/>
 </div>
-
-<style>
-  .fall {
-    transition: all 1.5s;
-    transform-origin: 50% 50% !important;
-    top: 1000px !important;
-    transform: rotate(360deg) !important;
-    opacity: 0;
-  }
-</style>
-
-<script>
-  const links = document.querySelectorAll('a')
-  links.forEach(link => {
-    link.addEventListener('click', () => {
-      link.classList.add('fall')
-      setTimeout(() => {
-        link.classList.remove('fall')
-      }, 2000)
-    })
-  })
-</script>
