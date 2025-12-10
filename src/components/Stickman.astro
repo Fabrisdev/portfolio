@@ -1,0 +1,29 @@
+<img id="stickman" src="/stickman.png" alt="Stickman grabbing" class="absolute top-110 left-40 cursor-pointer">
+
+<style>
+  .stick-fall {
+    animation-name: stick-fall-animation;
+    animation-duration: 5s;
+    animation-timing-function: ease;
+    transition: transform 5s;
+    transform: rotate(360deg);
+  }
+
+  @keyframes stick-fall-animation {
+    100% {
+      top: 2000px;
+      opacity: 0;
+    }
+  }
+</style>
+
+<script>
+  const stickman = document.querySelector('#stickman')
+
+  stickman.addEventListener('click', () => {
+    stickman.classList.add('stick-fall')
+    setTimeout(() => {
+      stickman.classList.remove('stick-fall')
+    }, 2000)
+  })
+</script>
