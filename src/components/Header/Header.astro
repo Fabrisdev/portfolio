@@ -1,14 +1,16 @@
-<div class="relative flex justify-center items-center gap-2 font-[ShootingStar] text-2xl">
-  <a href="#about-me" class="rounded-l-full bg-[#5D688A] h-15 flex justify-around items-center pl-15 pr-15 relative origin-bottom-right">ABOUT &nbspME</a>
+---
+import Button from "./Button.astro"
+---
+
+<div class="relative flex justify-center items-center gap-2 font-[ShootingStar] text-xl">
+  <Button title="ABOUT &nbsp;ME" src="/public/about_me_button.png" alt="About me button"/>
   <a href="#projects" class="rounded-xs bg-[#F7A5A5] h-15 flex justify-around items-center pl-15 pr-15 relative">PROJECTS</a>
   <a href="#contact" class="rounded-r-full bg-[#FFDBB6] h-15 flex justify-around items-center pl-15 pr-15 relative origin-bottom-left">CONTACT</a>
 </div>
 
 <style>
-  a {
-    top: 0px;
+  a, p {
     transition: all ease 0.5s;
-    border: 2px dashed black;
     text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000,
                 1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
   }

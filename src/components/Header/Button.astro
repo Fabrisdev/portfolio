@@ -1,0 +1,7 @@
+---
+const { title, src, alt } = Astro.props
+---
+<div class="relative flex justify-center items-center">
+    <img src={src} alt={alt} class="h-15">
+    <p class="absolute">{title}</p>
+</div>
