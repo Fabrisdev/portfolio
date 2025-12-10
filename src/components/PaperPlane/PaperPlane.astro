@@ -1,14 +1,8 @@
----
-import FpsCounter from "../FpsCounter.astro"
----
-
 <div id="paper-plane" class="fixed inset-0 pointer-events-none z-1000"></div>
-<FpsCounter/>
 
 <script>
 import { renderLoop, plane } from "./render";
 import * as THREE from 'three'
-const fpsCounter = document.querySelector("#fps-counter");
 const clock = new THREE.Clock()
 const mixer = new THREE.AnimationMixer(plane)
 
@@ -80,16 +74,5 @@ renderLoop(() => {
       }
     })
   }
-
-  if(import.meta.env.DEV) {
-    updateFpsCounter(dt)
-  }
 })
-
-function updateFpsCounter(dt: number) {
-  const fps = Math.round(1 / dt)
-  if (fpsCounter !== null) {
-		fpsCounter.textContent = `${fps} FPS`;
-	}
-}
 </script>
