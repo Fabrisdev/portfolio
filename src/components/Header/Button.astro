@@ -1,7 +1,45 @@
 ---
 const { title, src, alt } = Astro.props
 ---
-<div class="relative flex justify-center items-center">
+<div class="relative flex justify-center items-center header-button select-none cursor-pointer">
     <img src={src} alt={alt} class="h-15">
     <p class="absolute">{title}</p>
 </div>
+<style>
+  p {
+    transition: all ease 0.5s;
+    text-shadow: 2px 0 #000, -2px 0 #000, 0 2px #000, 0 -2px #000,
+                1px 1px #000, -1px -1px #000, 1px -1px #000, -1px 1px #000;
+  }
+  div:hover {
+    filter: saturate(3);
+    top: 10px;
+  }
+
+  div:first-child:hover {
+    transform: rotate(-10deg);
+  }
+
+  div:last-child:hover {
+    transform: rotate(10deg);
+  }
+
+  .fall {
+    transition: all 1.5s;
+    transform-origin: 50% 50% !important;
+    top: 1000px !important;
+    transform: rotate(360deg) !important;
+    opacity: 0;
+  }
+</style>
+<script>
+  const links = document.querySelectorAll('.header-button')
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      link.classList.add('fall')
+      setTimeout(() => {
+        link.classList.remove('fall')
+      }, 2000)
+    })
+  })
+</script>
