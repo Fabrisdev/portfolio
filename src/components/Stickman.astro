@@ -2,28 +2,28 @@
 
 <style>
   .stick-fall {
-    animation-name: stick-fall-animation;
-    animation-duration: 5s;
-    animation-timing-function: ease;
-    transition: transform 5s;
-    transform: rotate(360deg);
+    animation: stick-fall-animation 5s steps(25) forwards;
   }
 
   @keyframes stick-fall-animation {
     100% {
       top: 2000px;
       opacity: 0;
+      transform: rotate(3600deg);
     }
   }
 </style>
 
 <script>
-  const stickman = document.querySelector('#stickman')
+  const stickman = document.querySelector('#stickman') as HTMLImageElement
+  const armFrames = ["/stickman-arms-up.png", "/stickman-arms-down.png"]
+  let currentFrame = 0
 
   stickman.addEventListener('click', () => {
     stickman.classList.add('stick-fall')
-    setTimeout(() => {
-      stickman.classList.remove('stick-fall')
-    }, 2000)
+    setInterval(() => {
+      stickman.src = armFrames[currentFrame]
+      currentFrame = currentFrame === 0 ? 1 : 0
+    }, 200)
   })
 </script>
