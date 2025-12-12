@@ -3,11 +3,17 @@ import FpsCounter from "../FpsCounter.astro"
 ---
 
 <div id="paper-plane" class="fixed inset-0 pointer-events-none z-1000"></div>
+<canvas id="paper-canvas" class="fixed inset-0 pointer-events-none z-500" width="1920" height="1080"></canvas>
 <FpsCounter/>
 
 <script>
-import { renderLoop, plane, crayon, camera } from "./render";
+import { renderLoop, plane, crayon, camera, scene } from "./render";
 import * as THREE from 'three'
+import paper from 'paper'
+
+const paperCanvas = document.querySelector('#paper-canvas') as HTMLCanvasElement
+paper.setup(paperCanvas)
+
 const fpsCounter = document.querySelector("#fps-counter");
 const clock = new THREE.Clock()
 const mixer = new THREE.AnimationMixer(plane)
@@ -75,10 +81,41 @@ const raycaster = new THREE.Raycaster()
 
 const followPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 10); // z = -10
 
+const tip = new THREE.Mesh(
+  new THREE.SphereGeometry(0.1, 16, 16),
+  new THREE.MeshBasicMaterial({ color: 0xff0000 })
+);
+crayon.add(tip)
+tip.position.set(0,0.5,-5)
+tip.material.depthTest = false;
+tip.material.depthWrite = false;
+tip.renderOrder = 9999;
+
 window.addEventListener("mousemove", (event) => {
   mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
   mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 });
+
+let currentlyPainting = false
+let trail = new paper.Path({
+    strokeColor: 'rgba(255, 50, 50, 0.8)',
+    strokeWidth: 18,
+    strokeCap: 'round'
+})
+
+window.addEventListener('mouseup', () => {
+  currentlyPainting = false
+  trail = new paper.Path({
+    strokeColor: 'rgba(255, 50, 50, 0.8)',
+    strokeWidth: 18,
+    strokeCap: 'round'
+  })
+})
+
+window.addEventListener('mousedown', () => {
+  currentlyPainting = true
+  
+})
 
 renderLoop(() => {
   const dt = clock.getDelta()
@@ -101,6 +138,12 @@ renderLoop(() => {
   if(targetPos) {
     crayon.position.copy(targetPos)
   }
+
+  if(currentlyPainting) {
+    const screenPos = worldToScreen(tip.getWorldPosition(new THREE.Vector3()), camera)
+    trail.add(screenPos)
+    paper.view.update()
+  }
 })
 
 function updateFpsCounter(dt: number) {
@@ -109,4 +152,14 @@ function updateFpsCounter(dt: number) {
 		fpsCounter.textContent = `${fps} FPS`;
 	}
 }
+
+function worldToScreen(worldPos: THREE.Vector3, camera: THREE.PerspectiveCamera) {
+  const screenPos = worldPos.clone().project(camera)
+
+  return new paper.Point(
+    (screenPos.x + 1) * 0.5 * paper.view.size.width,
+    (1 - screenPos.y) * 0.5 * paper.view.size.height
+  )
+}
+
 </script>
