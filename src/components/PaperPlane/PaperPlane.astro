@@ -6,7 +6,7 @@ import FpsCounter from "../FpsCounter.astro"
 <FpsCounter/>
 
 <script>
-import { renderLoop, plane } from "./render";
+import { renderLoop, plane, crayon, camera } from "./render";
 import * as THREE from 'three'
 const fpsCounter = document.querySelector("#fps-counter");
 const clock = new THREE.Clock()
@@ -66,6 +66,20 @@ action.play()
 let time = 0
 let opacity = 1
 
+crayon.position.z = -10
+crayon.rotateY(0.3)
+crayon.rotateX(0.3)
+
+const mouse = new THREE.Vector2()
+const raycaster = new THREE.Raycaster()
+
+const followPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 10); // z = -10
+
+window.addEventListener("mousemove", (event) => {
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+});
+
 renderLoop(() => {
   const dt = clock.getDelta()
   time += dt
@@ -81,6 +95,12 @@ renderLoop(() => {
     })
   }
 
+  raycaster.setFromCamera(mouse, camera)
+  const targetPos = new THREE.Vector3()
+  raycaster.ray.intersectPlane(followPlane, targetPos)
+  if(targetPos) {
+    crayon.position.copy(targetPos)
+  }
 })
 
 function updateFpsCounter(dt: number) {

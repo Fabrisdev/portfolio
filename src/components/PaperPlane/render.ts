@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three-stdlib";
 
-export const { renderer, scene, camera, plane } = await setup();
+export const { renderer, scene, camera, plane, crayon } = await setup();
 
 let renderCallback: (() => void) | null = null;
 
@@ -19,13 +19,13 @@ function animate() {
 
 animate();
 
-function loadPlane(): Promise<THREE.Group<THREE.Object3DEventMap>> {
-	let plane = null;
+function loadModel(path: string): Promise<THREE.Group<THREE.Object3DEventMap>> {
+	let m = null;
 	const loader = new GLTFLoader();
 	return new Promise((resolve, _) => {
-		loader.load("/paper_plane.glb", (model) => {
-			plane = model.scene;
-			resolve(plane);
+		loader.load(path, (model) => {
+			m = model.scene;
+			resolve(m);
 		});
 	});
 }
@@ -48,13 +48,16 @@ async function setup() {
 	const light = new THREE.DirectionalLight();
 	light.position.set(5, 5, 5);
 	scene.add(light);
-	const plane = await loadPlane();
+	const plane = await loadModel("/paper_plane.glb");
 	scene.add(plane);
+	const crayon = await loadModel("/crayon.glb");
+	scene.add(crayon);
 
 	return {
 		renderer,
 		scene,
 		camera,
 		plane,
+		crayon,
 	};
 }
